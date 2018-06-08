@@ -2,4 +2,7 @@ CC=gcc
 CCFLAGS=-Wall
 
 all:
-	$(CC) $(CCFLAGS) -c src/felixlib.c
+	make -C src
+
+clean:
+	make clean -C src

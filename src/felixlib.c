@@ -12,13 +12,13 @@ int getsize(const char *string) {
 		i++;
 	}
 
-	return i - 1;
+	return i;
 }
 
 /*
  * calculate base to the power of exp
  */
-int pow(const int base, int exp) {
+int power(const int base, int exp) {
 	int result = 1;
 	while(exp != 0) {
 		result *= base;
@@ -68,7 +68,7 @@ int toint(const char *string) {
 	int finalnum = 0;
 	for (int i = 0; i < getsize(string); i++) {
 		tempnum = string[i] - '0';
-		finalnum = tempnum * pow(10, getsize(string) - i - 1);
+		finalnum = tempnum * power(10, getsize(string) - i - 1);
 		result += finalnum;
 	}
 
@@ -123,4 +123,15 @@ char **strsplit(const char *inputstring, const char *splitchar) {
 	endsize++;
 	
 	return endsize;
+}
+
+int isnumber( const char *string ) {
+	int isnumber = 1;
+	for (int i = 0; i < getsize(string); i++ ) {
+		if (string[i] < 48 || string[i] > 57) {
+			isnumber = 0;
+		}
+	}
+
+	return isnumber;
 }
