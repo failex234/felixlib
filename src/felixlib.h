@@ -33,4 +33,20 @@ char **strsplit( const char*, const char* );
  */
 int isnumber( const char* );
 
+
+/**
+* Convert a decimal number to a binary number string
+*/
+char *tobinary(int dec);
+
+/**
+* Convert a binary number string to a decimal number
+*/
+int todecimal(const char *bin);
+/**
+* Encode a binary number string to Base64
+*/
+char *tobase64(const char *bin);
+
+
 #endif

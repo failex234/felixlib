@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+char base64chars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
 /*
  * get size of a string
  */
@@ -134,4 +136,117 @@ int isnumber( const char *string ) {
 	}
 
 	return isnumber;
+}
+
+//Convert a decimal number into a binary number string
+char *tobinary(int decimal) {
+    int tempdec = decimal;
+    int binarynumlength = 0;
+    int binarylong = 8;
+
+    //Get the length of the binary number
+    while (tempdec != 0) {
+        binarynumlength++;
+        tempdec /= 2;
+    }
+
+    tempdec = decimal;
+
+    //Check how many zeroes are needed to fill up
+    if (binarynumlength % 8 != 0) {
+        float filledbinarydigits = binarynumlength / 8.0f;
+        filledbinarydigits = (float) ceil(filledbinarydigits);
+        binarylong = (int) filledbinarydigits * 8;
+    } else {
+        binarylong = binarynumlength;
+    }
+
+
+    char *binarynum = malloc(sizeof(char) * (binarylong));
+    int strindex = binarylong - 1;
+
+    while (tempdec != 0) {
+        if (tempdec % 2 == 0) {
+            binarynum[strindex] = '0';
+        } else {
+            binarynum[strindex] = '1';
+        }
+        strindex--;
+        tempdec /= 2;
+    }
+    binarynum[binarylong] = '\0';
+
+    //Fill in leading zeroes
+    if (binarylong - binarynumlength != 0) {
+        while(strindex > 0) {
+            binarynum[strindex--] = '0';
+        }
+        binarynum[0] = '0';
+    }
+
+
+    return binarynum;
+}
+
+//Convert a binary number (string) to a decimal number
+int todecimal(const char *bin) {
+    int length = strlen(bin);
+    int position = 0;
+    int result = 0;
+
+    while(position != length) {
+        result += (bin[length - position - 1] - 48) * (int) pow(2, position);
+        position++;
+    }
+
+    return result;
+}
+
+
+//Encode a "binary number string" to base64. Use toBinary to convert your ascii characters 
+//into binary numbers. Use toBinary on all ascii characters in a string to get a "binary number string"
+char *tobase64(const char *bin) {
+    char *b64str = malloc(sizeof(char) * (strlen(bin) * 8 / 6 + 1 + strlen(bin) % 6));
+    int b64index = 0;
+
+    char *chrptr = (char *) bin;
+    while(strlen(chrptr) != strlen(bin) % 6) {
+        char substr[7];
+        memcpy(substr, chrptr, 6);
+        substr[6] = '\0';
+
+        int num = todecimal(substr);
+        b64str[b64index] = base64chars[num];
+        b64index++;
+
+        chrptr += 6;
+    }
+    //With fillings
+    if (strlen(bin) % 6) {
+        int missing = strlen(bin) % 6;
+        int count = missing + 1;
+        char remainder[7];
+        memcpy(remainder, chrptr, (size_t) 6 - missing);
+        while (count >= 0) {
+            remainder[5 - count] = '0';
+            count--;
+        }
+        remainder[6] = '\0';
+
+        int num = todecimal(remainder);
+        b64str[b64index] = base64chars[num];
+        b64index++;
+
+        while (missing != 0) {
+            b64str[b64index] = '=';
+            missing--;
+            b64index++;
+        }
+    } else {
+
+    }
+
+    b64str[b64index] = '\0';
+
+    return b64str;
 }
