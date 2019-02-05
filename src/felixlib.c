@@ -242,8 +242,6 @@ char *tobase64(const char *bin) {
             missing--;
             b64index++;
         }
-    } else {
-
     }
 
     b64str[b64index] = '\0';
