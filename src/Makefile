@@ -1,8 +1,7 @@
 cc=gcc
 
 all:
-	$(CC) -c -g felixlib.c
-	$(CC) -o ../felixlibdemo -g felixlib.o main.c
+	$(CC) -o ../felixlibdemo felixlib.c main.c -lm
 clean:
 	rm felixlib.o
 	rm ../felixlibdemo
